@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  pg-db:
+    image: postgres:16
+    restart: no
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD-postgres}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_DB=sonar
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg-dbdata:/var/lib/postgresql/data
+      - pg-db:/var/lib/postgresql
+      - ./scripts:/docker-entrypoint-initdb.d/
+
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on: [pg-db]
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pg-db:5432/gestao_estoque
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+volumes:
+  pg-dbdata:
+    name: "pg-dbata"
+  pg-db:
+    name: "pg-db"
