@@ -29,11 +29,9 @@ public class ReportController {
   private final ReportService reportService;
 
   @GetMapping
-  public void generateLowStockReport(
+  public void generateReport(
     HttpServletResponse response,
-    @RequestParam ReportType type,
-    @RequestParam(required = false) LocalDate start,
-    @RequestParam(required = false) LocalDate end
+    @RequestParam ReportType type
   ) throws IOException {
 
     response.setContentType("application/octet-stream");
